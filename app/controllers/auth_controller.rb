@@ -1,4 +1,6 @@
 class AuthController < ApplicationController
+  before_action :authenticate_user, only: [:profile]
+
   def login
     return render json: { message: 'ok' }, status: :ok
   end
@@ -11,12 +13,16 @@ class AuthController < ApplicationController
 
     ActiveRecord::Base.transaction do
       name = "#{register_params[:full_name]}'s Org"
-      @organization = Organization.create!(name: name, slug: name.parameterize)
+      @organization = Organization.create!(name: name, slug: name.parameterize, status: "active")
       @user = User.new(register_params)
       @user.organization = @organization
-      @user.role = "owner"
+      @user.role = User.roles[:owner]
       @user.save!
     end
+  end
+
+  def profile
+    puts @current_organization_id
   end
 
   private

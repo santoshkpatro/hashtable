@@ -98,6 +98,7 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.6.3)
+    jwt (2.7.0)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -247,6 +248,7 @@ DEPENDENCIES
   bootsnap
   debug
   jbuilder
+  jwt
   kaminari
   kredis
   pg (~> 1.1)
