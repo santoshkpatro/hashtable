@@ -9,6 +9,7 @@
 #  slug            :string           not null
 #  status          :string           default("draft")
 #  title           :string           not null
+#  validity        :integer          default(365)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  organization_id :bigint           not null
@@ -28,4 +29,20 @@ class Course < ApplicationRecord
   has_many    :enrollments, dependent: :destroy
   has_many    :chapters, dependent: :destroy
   has_many    :lessons, dependent: :destroy
+  has_many    :orders
+
+  after_create :increment_courses_count_in_organization
+  
+  after_destroy :decrement_courses_count_in_organization
+
+  private
+    def increment_courses_count_in_organization
+      self.organization.courses_count += 1
+      self.organization.save!
+    end
+
+    def decrement_courses_count_in_organization
+      self.organization.courses_count -= 1
+      self.organization.save!
+    end
 end

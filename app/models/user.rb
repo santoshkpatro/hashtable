@@ -26,6 +26,12 @@ class User < ApplicationRecord
 
   belongs_to  :organization
 
+  has_many  :orders
+
+  after_create :increment_users_count_in_organization
+  
+  after_destroy :decrement_users_count_in_organization
+
   enum role: {
     admin: 'admin',
     student: 'student',
@@ -58,4 +64,15 @@ class User < ApplicationRecord
 
     decoded_token[0]
   end
+
+  private
+    def increment_users_count_in_organization
+      self.organization.users_count += 1
+      self.organization.save!
+    end
+
+    def decrement_users_count_in_organization
+      self.organization.users_count -= 1
+      self.organization.save!
+    end
 end

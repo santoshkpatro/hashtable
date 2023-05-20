@@ -8,6 +8,7 @@ class CreateCourses < ActiveRecord::Migration[7.0]
       t.string      :status, default: 'draft'
       t.string      :currency
       t.decimal     :price, precision: 10, scale: 2, default: 0
+      t.integer     :validity, default: 365
       
       t.timestamps
     end

@@ -10,4 +10,9 @@ Rails.application.routes.draw do
       get  'profile'
     end
   end
+
+  namespace :admin do
+    resources :courses
+    resources :users
+  end
 end

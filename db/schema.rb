@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_20_062833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,6 +36,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
     t.string "status", default: "draft"
     t.string "currency"
     t.decimal "price", precision: 10, scale: 2, default: "0.0"
+    t.integer "validity", default: 365
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id", "slug"], name: "index_courses_on_organization_id_and_slug", unique: true
@@ -48,6 +49,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
     t.bigint "user_id", null: false
     t.string "role", default: "student"
     t.boolean "active", default: true
+    t.datetime "enrolled_on"
+    t.datetime "valid_till"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["course_id"], name: "index_enrollments_on_course_id"
@@ -73,6 +76,35 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
     t.index ["organization_id"], name: "index_lessons_on_organization_id"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.bigint "organization_id"
+    t.bigint "course_id"
+    t.bigint "user_id"
+    t.string "slug", null: false
+    t.string "source", default: "user"
+    t.integer "price", null: false
+    t.integer "discount", default: 0
+    t.integer "amount", null: false
+    t.string "status", default: "initiated"
+    t.string "payment_status", default: "due"
+    t.string "payment_id"
+    t.string "payment_gateway"
+    t.boolean "paid", default: false
+    t.integer "billed_enrollment_count"
+    t.datetime "billing_start_date"
+    t.datetime "billing_end_date"
+    t.datetime "due_date"
+    t.json "billing_address"
+    t.json "user_details"
+    t.json "course_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_orders_on_course_id"
+    t.index ["organization_id"], name: "index_orders_on_organization_id"
+    t.index ["slug"], name: "index_orders_on_slug", unique: true
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -81,6 +113,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "courses_count", default: 0
+    t.integer "users_count", default: 0
     t.index ["slug"], name: "index_organizations_on_slug", unique: true
   end
 
@@ -106,5 +140,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_18_041224) do
   add_foreign_key "lessons", "chapters"
   add_foreign_key "lessons", "courses"
   add_foreign_key "lessons", "organizations"
+  add_foreign_key "orders", "courses"
+  add_foreign_key "orders", "organizations"
+  add_foreign_key "orders", "users"
   add_foreign_key "users", "organizations"
 end

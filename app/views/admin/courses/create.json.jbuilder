@@ -1,0 +1,9 @@
+json.id           @course.id
+json.slug         @course.slug
+json.title        @course.title
+json.description  @course.description
+json.price        @course.price
+json.status       @course.status
+json.validity     @course.validity
+json.created_at   @course.created_at
+json.updated_at   @course.updated_at

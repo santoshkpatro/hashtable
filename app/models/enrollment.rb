@@ -4,7 +4,9 @@
 #
 #  id              :bigint           not null, primary key
 #  active          :boolean          default(TRUE)
+#  enrolled_on     :datetime
 #  role            :string           default("student")
+#  valid_till      :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  course_id       :bigint           not null
