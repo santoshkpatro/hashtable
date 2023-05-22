@@ -3,16 +3,23 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "articles#index"
-  resources :auth do
-    collection do
-      post 'login'
-      post 'register'
-      get  'profile'
-    end
-  end
 
   namespace :admin do
+    resources :auth do
+      collection do
+        post 'login'
+        post 'register'
+        get  'profile'
+      end
+    end
+    
     resources :courses
     resources :users
+    resources :enrollments
+    resources :orders
+
+    namespace :organization do
+      resources :orders
+    end
   end
 end

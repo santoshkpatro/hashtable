@@ -1,4 +1,4 @@
-class AuthController < ApplicationController
+class Admin::AuthController < ApplicationController
   before_action :authenticate_user, only: [:profile]
 
   def login
@@ -22,7 +22,7 @@ class AuthController < ApplicationController
   end
 
   def profile
-    puts @current_organization_id
+    @user = User.find_by(id: @current_user_id, organization: @current_organization_id)
   end
 
   private

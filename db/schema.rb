@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_20_062833) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_22_045700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_20_062833) do
     t.datetime "valid_till"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "order_required", default: true
     t.index ["course_id"], name: "index_enrollments_on_course_id"
     t.index ["organization_id", "user_id"], name: "index_enrollments_on_organization_id_and_user_id", unique: true
     t.index ["organization_id"], name: "index_enrollments_on_organization_id"
@@ -77,14 +78,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_20_062833) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.bigint "organization_id"
+    t.bigint "organization_id", null: false
     t.bigint "course_id"
     t.bigint "user_id"
     t.string "slug", null: false
     t.string "source", default: "user"
-    t.integer "price", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
     t.integer "discount", default: 0
-    t.integer "amount", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
     t.string "status", default: "initiated"
     t.string "payment_status", default: "due"
     t.string "payment_id"

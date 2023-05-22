@@ -3,7 +3,7 @@
 # Table name: orders
 #
 #  id                      :bigint           not null, primary key
-#  amount                  :integer          not null
+#  amount                  :decimal(10, 2)   not null
 #  billed_enrollment_count :integer
 #  billing_address         :json
 #  billing_end_date        :datetime
@@ -14,7 +14,7 @@
 #  paid                    :boolean          default(FALSE)
 #  payment_gateway         :string
 #  payment_status          :string           default("due")
-#  price                   :integer          not null
+#  price                   :decimal(10, 2)   not null
 #  slug                    :string           not null
 #  source                  :string           default("user")
 #  status                  :string           default("initiated")
@@ -22,7 +22,7 @@
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #  course_id               :bigint
-#  organization_id         :bigint
+#  organization_id         :bigint           not null
 #  payment_id              :string
 #  user_id                 :bigint
 #
@@ -41,6 +41,13 @@
 #
 class Order < ApplicationRecord
   belongs_to  :organization
-  belongs_to  :course
-  belongs_to  :user
+  belongs_to  :course, optional: true
+  belongs_to  :user, optional: true
+
+  before_create  :generate_order_slug
+
+  private
+    def generate_order_slug
+      self.slug = "order_#{SecureRandom.hex(10)}"
+    end
 end

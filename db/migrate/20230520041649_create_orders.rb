@@ -1,14 +1,14 @@
 class CreateOrders < ActiveRecord::Migration[7.0]
   def change
     create_table :orders do |t|
-      t.references  :organization, foreign_key: true
+      t.references  :organization, null: false, foreign_key: true
       t.references  :course, foreign_key: true
       t.references  :user, foreign_key: true
       t.string      :slug, null: false
       t.string      :source, default: 'user'
-      t.integer     :price, null: false
+      t.decimal     :price, precision: 10, scale: 2, null: false
       t.integer     :discount, default: 0
-      t.integer     :amount, null: false
+      t.decimal     :amount, precision: 10, scale: 2, null: false
       t.string      :status, default: 'initiated'
       t.string      :payment_status, default: 'due'
       t.string      :payment_id
